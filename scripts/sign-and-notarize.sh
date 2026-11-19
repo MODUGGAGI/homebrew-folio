@@ -99,13 +99,7 @@ echo "Wrote $zip"
 
 # Drag-to-install disk image for the website's download button; Sparkle and the cask keep using the zip.
 dmg=Folio.dmg
-stage="$tmp/dmg"
-rm -rf "$stage" "$dmg"
-mkdir -p "$stage"
-ditto "$app" "$stage/Folio.app"
-ln -s /Applications "$stage/Applications"
-hdiutil create -volname Folio -srcfolder "$stage" -format UDZO -fs HFS+ "$dmg" >/dev/null
-rm -rf "$stage"
+"$(dirname "$0")/make-dmg.sh" "$app" "$dmg"
 codesign --force --timestamp --sign "$identity" "$dmg"
 notarize "$dmg"
 if [[ "$identity" != - ]]; then

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="660" height="440" viewBox="0 0 660 440">
+  <!-- Folio DMG window background, 660x440 pt. Finder places Folio.app at (180,190) and the
+       Applications link at (480,190), icon size 128. Blues come from design/icon/folio-icon.svg.
+       The aurora band runs behind Finder's file-name labels (around y=270) in a mid tone, so the
+       labels stay readable whether Finder draws them black (light mode) or white (dark mode). -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FBFCFF"/><stop offset="1" stop-color="#EEF1F9"/></linearGradient>
+    <linearGradient id="face" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6DB0FA"/><stop offset="1" stop-color="#4C97F0"/></linearGradient>
+    <linearGradient id="band" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#4C97F0"/><stop offset="0.3" stop-color="#5B86EA"/>
+      <stop offset="0.55" stop-color="#7A7BE6"/><stop offset="0.8" stop-color="#4F8FEC"/><stop offset="1" stop-color="#3FA9E6"/>
+    </linearGradient>
+    <linearGradient id="veil" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8FE3DC"/><stop offset="0.5" stop-color="#B0CBF6"/><stop offset="1" stop-color="#C7B5F5"/>
+    </linearGradient>
+    <filter id="blur-l" filterUnits="userSpaceOnUse" x="-200" y="-200" width="1060" height="840"><feGaussianBlur stdDeviation="74"/></filter>
+    <filter id="blur-m" filterUnits="userSpaceOnUse" x="-200" y="-200" width="1060" height="840"><feGaussianBlur stdDeviation="48"/></filter>
+    <filter id="sh" x="-30%" y="-30%" width="160%" height="190%"><feDropShadow dx="0" dy="3" stdDeviation="3.5" flood-color="#1E2A6E" flood-opacity="0.28"/></filter>
+    <path id="arrow" d="M-34 -6 H10 V-19 L34 0 L10 19 V6 H-34 Z" stroke-width="8" stroke-linejoin="round"/>
+    <mask id="arrow-mask"><use href="#arrow" fill="#fff" stroke="#fff"/></mask>
+    <clipPath id="frame"><rect width="660" height="440"/></clipPath>
+  </defs>
+  <g clip-path="url(#frame)">
+    <rect width="660" height="440" fill="url(#bg)"/>
+    <!-- aurora: soft light in the corners -->
+    <ellipse cx="70" cy="30" rx="210" ry="110" fill="#B0CBF6" opacity="0.75" filter="url(#blur-l)"/>
+    <ellipse cx="610" cy="20" rx="190" ry="100" fill="#C7B5F5" opacity="0.55" filter="url(#blur-l)"/>
+    <ellipse cx="330" cy="455" rx="330" ry="80" fill="#8FE3DC" opacity="0.45" filter="url(#blur-l)"/>
+    <!-- aurora: a wide pale veil, then two soft bands that cross behind the labels -->
+    <path d="M-80 400 C 80 300, 220 380, 350 318 S 560 250, 740 300" fill="none" stroke="url(#veil)" stroke-width="110" opacity="0.75" filter="url(#blur-l)"/>
+    <path d="M-80 372 C 30 344, 100 288, 180 279 S 365 218, 480 270 S 640 320, 740 182" fill="none" stroke="url(#band)" stroke-width="94" stroke-linecap="round" opacity="0.76" filter="url(#blur-m)"/>
+    <path d="M-80 236 C 60 306, 150 296, 260 262 S 420 312, 520 290 S 660 222, 740 262" fill="none" stroke="#7A7BE6" stroke-width="60" opacity="0.38" filter="url(#blur-m)"/>
+    <path d="M-80 300 C 60 270, 120 240, 200 238 S 400 200, 500 232 S 650 250, 740 160" fill="none" stroke="#FFFFFF" stroke-width="10" opacity="0.45" filter="url(#blur-m)"/>
+    <!-- drop slot behind the Applications link -->
+    <rect x="410" y="116" width="140" height="140" rx="32" fill="#FFFFFF" fill-opacity="0.55" stroke="#8EB1EE" stroke-width="1.5" stroke-dasharray="6 5"/>
+    <!-- arrow: a blue face with three darker copies stacked straight below it -->
+    <g transform="translate(330 186)" filter="url(#sh)">
+      <use href="#arrow" y="7.5" fill="#1E2A6E" stroke="#1E2A6E"/>
+      <use href="#arrow" y="5" fill="#2A5FD0" stroke="#2A5FD0"/>
+      <use href="#arrow" y="2.5" fill="#3A7BE2" stroke="#3A7BE2"/>
+      <rect x="-44" y="-29" width="88" height="58" fill="url(#face)" mask="url(#arrow-mask)"/>
+    </g>
+  </g>
+</svg>
