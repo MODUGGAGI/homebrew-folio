@@ -20,6 +20,8 @@ python3 -m http.server 8765 --directory docs
 git pull --rebase
 ```
 
+CSS나 JS를 고치면 `docs/index.html`에서 그 파일 주소 끝의 `?v=` 값을 바꾼다. GitHub Pages가 10분 캐시를 걸어 두어서, 바꾸지 않으면 새 HTML이 예전 CSS와 함께 보일 수 있다.
+
 ## 구성
 
 - `docs/index.html`, `docs/assets/css/style.css`, `docs/assets/js/main.js`: 히어로, 기능, AI 연결, 설치
