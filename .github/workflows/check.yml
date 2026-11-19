@@ -1,0 +1,29 @@
+name: check
+
+# Every pull request: the release scripts still parse, and the appcast and the cask they print are well formed.
+# A broken script would otherwise show up only in the middle of a release. No secrets, no signing.
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  scripts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+      - name: Shell syntax
+        run: |
+          for script in scripts/*.sh dmg/*.sh; do
+            bash -n "$script"
+          done
+      - name: Appcast and cask
+        run: |
+          scripts/write-appcast.sh 9.9.9 'sparkle:edSignature="QUJD" length="123"' > "$RUNNER_TEMP/appcast.xml"
+          python3 -c 'import sys, xml.dom.minidom; xml.dom.minidom.parse(sys.argv[1])' "$RUNNER_TEMP/appcast.xml"
+          scripts/write-cask.sh 9.9.9 "$(printf x | sha256sum | cut -d' ' -f1)" > "$RUNNER_TEMP/folio.rb"
+          ruby -c "$RUNNER_TEMP/folio.rb"
