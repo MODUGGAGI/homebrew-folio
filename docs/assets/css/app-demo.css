@@ -47,7 +47,11 @@
 .sb .lensbox { margin-top: 52px; padding: 14px 12px; font-size: 14px; }
 .lensbox { position: relative; }
 .rows { display: flex; flex-direction: column; gap: 6px; }
-.sec { margin: 0; padding: 0 10px 2px; font-size: 10px; font-weight: 600; color: var(--ink2); line-height: 14px; }
+.sec { margin: 0; padding: 0 10px 2px; font-size: 12px; font-weight: 600; color: var(--ink2); line-height: 16px; }
+/* The sidebar's 공고 title carries the order menu at its right end, in the same size. */
+.order-row { display: flex; align-items: baseline; justify-content: space-between; }
+.order { display: flex; align-items: center; gap: 3px; }
+.app .order svg { width: 11px; height: 11px; stroke-width: 1.8; }
 .sb .sec + .row, .sb .sec + .rows { margin-top: 0; }
 .sb .sec.gap { padding-top: 20px; }
 .row {
@@ -187,18 +191,22 @@
 [data-status="submitted"] .s0 .ic { color: var(--accent); }
 [data-status="submitted"] .line i { transform: none; }
 [data-status="submitted"] .s1 small { opacity: 1; }
+.acts { display: flex; justify-content: center; gap: 8px; margin-top: 10px; }
 .solid {
-  display: block; margin: 10px auto 0; height: 26px; padding: 0 12px; border-radius: 8px; border: 0;
-  font: inherit; font-size: 12px; font-weight: 500; background: var(--accent); color: #fff;
+  display: inline-grid; height: 26px; padding: 0 12px; border-radius: 8px; border: 0; align-items: center;
+  font: inherit; font-size: 12px; font-weight: 500; white-space: nowrap; background: rgba(0, 0, 0, .08); color: var(--ink);
   transition: background var(--state), color var(--state);
 }
-[data-status="submitted"] .solid { background: rgba(0, 0, 0, .08); color: var(--ink); }
-.solid span { transition: opacity var(--content); }
+.solid[hidden] { display: none; }
+/* Each is at least as wide as 제출 완료로 표시, so the pair are one width. */
+.solid > * { grid-area: 1 / 1; font-weight: inherit; }
+.solid > b { visibility: hidden; }
+[data-status="preparing"] .solid.main { background: var(--accent); color: #fff; }
 .jd svg { width: 15px; height: 15px; }
 .host { font-size: 10px; color: var(--ink2); font-weight: 400; }
 .jd { gap: 6px; padding: 6px 10px; line-height: 17px; font-weight: 400; }
-.dochead { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px 2px; font-size: 10px; font-weight: 600; color: var(--ink2); }
-.dochead span { display: flex; align-items: center; gap: 4px; }
+.dochead { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px 2px; font-size: 12px; font-weight: 600; color: var(--ink2); }
+.dochead span { display: flex; align-items: center; gap: 4px; font-size: 10px; }
 .dochead svg { width: 11px; height: 11px; stroke-width: 2; }
 .older { display: flex; align-items: center; gap: 4px; padding: 4px 10px; font-size: 10px; font-weight: 500; color: var(--ink2); }
 .older svg { width: 9px; height: 9px; stroke-width: 2.4; }
@@ -321,3 +329,27 @@
 
 /* Watch only: the scenes play by themselves, so nothing in the window takes a click, a hover or a scroll. */
 .app { pointer-events: none; }
+
+/* 자기소개서 row in an application's column: a label and its "…" menu */
+.row.cl { gap: 6px; padding: 0 0 0 10px; font-weight: 400; }
+.row.cl svg { width: 15px; height: 15px; }
+.row.cl .more svg { width: 15px; height: 15px; }
+
+/* CoverLetterDetail: a card per question, full width of the pane, the + to add one at the bottom */
+.dview.cover { padding: 76px 32px 0; overflow: hidden; }
+.cards { display: flex; flex-direction: column; gap: 16px; }
+.clcard { display: flex; flex-direction: column; gap: 10px; padding: 16px; border-radius: 12px; background: #f4f4f5; }
+.clq { display: flex; align-items: baseline; gap: 8px; font-size: 15px; font-weight: 600; line-height: 20px; }
+.app .clq > svg { width: 14px; height: 14px; color: var(--ink2); align-self: center; }
+.cln { color: var(--ink2); font-variant-numeric: tabular-nums; }
+.clt { flex: 1; min-width: 0; }
+.clq .more { align-self: center; height: 20px; }
+.cla { padding: 0 5px; font-size: 14px; line-height: 22px; min-height: 80px; }
+.cla .caret { display: inline-block; height: 17px; vertical-align: -3px; }
+.clcard:not(.writing) .caret { visibility: hidden; }
+.clc { font-size: 12px; color: var(--ink2); text-align: right; font-variant-numeric: tabular-nums; }
+.cl-add {
+  position: absolute; left: 50%; bottom: 16px; width: 36px; height: 36px; margin-left: -18px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--accent); color: #fff; box-shadow: 0 0 12px rgba(0, 0, 0, .12);
+}
+.app .cl-add svg { width: 17px; height: 17px; stroke-width: 2.2; }

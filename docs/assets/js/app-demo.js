@@ -15,6 +15,8 @@
  *   load:  how long 공고를 불러오는 중… shows before the page is loaded
  */
 const POSTING_URL = 'https://recruit.webtoonscorp.com/rcrt/view.do?annoId=30005648';
+// The sentence the last scene types at the end of the second answer, so the character count moves.
+const CL_TYPED = ' k6로 초당 500건의 조회 부하를 걸어 커넥션 풀 크기를 맞추고 오류율 0%를 확인했습니다.';
 const SHOWCASE = {
   lead: 350,
   move: 600,
@@ -42,10 +44,12 @@ const SHOWCASE = {
         { at: 'sheet:add', hold: 1050 },
         { at: 'post:scroll:560', scroll: true, hold: 1300 },
       ] },
-    { tab: '공고별 이력서', title: '공고마다 따로 다듬는 이력서', text: '공고마다 이력서를 따로 다듬고 버전도 따로 쌓여요.',
+    { tab: '공고별 이력서 / 자기소개서', title: '공고마다 따로 두는 이력서와 자기소개서', text: '공고마다 이력서를 따로 다듬고 자기소개서도 그 공고 안에 함께 보관해요.',
       steps: [
-        { at: 'row:daangn', hold: 1600 },
-        { at: 'row:webtoon', hold: 2000 },
+        { at: 'row:daangn', hold: 1400 },
+        { at: 'row:webtoon', hold: 1600 },
+        { at: 'app:cl', hold: 900 },
+        { at: 'cl:answer:2', type: CL_TYPED, hold: 2200 },
       ] },
   ],
 };
@@ -75,10 +79,19 @@ const SHOWCASE = {
   ];
   // Applications a click can open. `doc` is the folder under assets/docs/ holding that application's resume.
   const APPINFO = {
-    webtoon: { name: 'NAVER WEBTOON', role: '[2027 상반기 채용연계형 인턴십] 네이버웹툰 백엔드 서버 개발', host: 'recruit.webtoonscorp.com', doc: 'tailored' },
+    webtoon: { name: 'NAVER WEBTOON', role: '[2027 상반기 채용연계형 인턴십] 네이버웹툰 백엔드 서버 개발', host: 'recruit.webtoonscorp.com', doc: 'tailored', cover: true },
     // No saved posting page for this one, so opening it shows its resume instead of the posting.
     daangn: { name: '당근', role: '백엔드 엔지니어', host: 'about.daangn.com', doc: 'daangn', noPosting: true },
   };
+  // The NAVER WEBTOON application's cover letter (CoverLetterView): a card per question.
+  const COVER = [
+    ['네이버웹툰 백엔드 인턴십에 지원한 이유와 입사 후 이루고 싶은 목표를 적어 주세요.',
+      '포근랩에서 iOS 앱을 만들며 앱이 느린 순간의 절반은 서버 응답이라는 것을 배웠습니다. 화면 뒤에서 수많은 요청을 받아 내는 쪽의 일을 직접 해 보고 싶어 개인 프로젝트로 모아장 API를 만들어 운영하고 있습니다. 네이버웹툰은 새 회차가 열리는 순간 많은 독자가 한꺼번에 몰리는 서비스입니다. 그 순간에도 첫 화면이 빠르게 뜨도록 캐시와 API 구조를 다듬는 개발자가 되고 싶습니다.'],
+    ['가장 어려웠던 기술적 문제와 해결 과정을 구체적으로 적어 주세요.',
+      '모아장 API에서 가족이 같은 장보기 목록을 동시에 고치면 한 사람의 변경이 사라지는 문제가 있었습니다. 목록마다 버전 번호를 두고, 저장할 때 버전이 다르면 충돌로 돌려보내 클라이언트에서 병합하게 바꿨습니다. 이어서 자주 읽는 목록 조회를 Redis에 캐시하고 쓰기가 일어난 키만 지우도록 해 조회 p95를 140ms에서 12ms로 줄였습니다.'],
+    ['팀에서 의견이 달랐던 경험과 그때 어떻게 했는지 적어 주세요.',
+      '홈 화면 API를 하나로 합치자고 제안했을 때 서버 팀은 응답이 커져 캐시가 어려워진다고 걱정했습니다. 화면별 호출 기록을 모아 어떤 값이 함께 바뀌는지 보여 드렸고, 자주 바뀌는 부분만 따로 떼어 내는 안으로 합의했습니다. 그 결과 첫 화면 호출이 6회에서 2회로 줄었습니다.'],
+  ];
   const STATUS = { preparing: '준비 중', submitted: '제출 완료' };
   // The application the 공고 추가 scene adds; the sidebar starts without it.
   const NEW_APP = 'webtoon';
@@ -113,6 +126,10 @@ const SHOWCASE = {
     split: '<rect x="1.5" y="2.5" width="13" height="11" rx="2"/><path d="M8 2.5v11"/>',
     pdf: '<path d="M4 1.8h5.4l3 3v9.4H4z"/><path d="M8.2 12.2V7.4M6.3 9.2l1.9-1.9 1.9 1.9"/>',
     open: '<rect x="2" y="2" width="12" height="12" rx="2.6"/><path d="M6.3 9.7l4-4M7 5.6h3.4V9"/>',
+    quote: '<path d="M2.5 3.5h11M2.5 6.5h11M2.5 9.5h6.5"/><path class="solid-ic" d="M11 9.2h2.6v2.4c0 1.4-.8 2.3-2.1 2.6l-.3-.8c.7-.2 1-.7 1-1.4H11z"/>',
+    folder: '<path d="M1.8 4.2c0-.8.6-1.4 1.4-1.4h3l1.4 1.6h5.2c.8 0 1.4.6 1.4 1.4v6.3c0 .8-.6 1.4-1.4 1.4H3.2c-.8 0-1.4-.6-1.4-1.4z"/><path d="M1.8 6.6h12.4"/>',
+    grip: '<path d="M3 4.5h10M3 8h10M3 11.5h10"/>',
+    sort: '<path d="M5 13V3M2.6 5.4 5 3l2.4 2.4M11 3v10M8.6 10.6 11 13l2.4-2.4"/>',
     link: '<path d="M6.8 9.2a2.6 2.6 0 0 0 3.7 0l2.1-2.1a2.6 2.6 0 0 0-3.7-3.7l-.7.7"/><path d="M9.2 6.8a2.6 2.6 0 0 0-3.7 0L3.4 8.9a2.6 2.6 0 0 0 3.7 3.7l.7-.7"/>',
   };
   const ic = (name) => `<svg viewBox="0 0 16 16" aria-hidden="true">${I[name]}</svg>`;
@@ -133,8 +150,18 @@ const SHOWCASE = {
       <div class="fold"><div><div class="slot">${ic('plus')}새 버전으로 이력서 업데이트</div></div></div>
       ${vrow(doc, n, true)}
       ${n > 1 ? `<div class="older">이전 버전 ${n - 1}개 보기${ic('chevron')}</div>` : ''}
-      <div class="fold"><div><p class="sec">포트폴리오</p><div class="slot">${ic('plus')}포트폴리오 추가…</div></div></div>`;
+      <div class="fold"><div><p class="sec">포트폴리오</p><div class="slot">${ic('plus')}포트폴리오 추가…</div></div></div>
+      ${APPINFO[k].cover ? `<p class="sec">자기소개서</p>
+      <div class="row cl" data-at="app:cl" data-item="cl">${ic('quote')}<span class="t">문항과 답변</span><span class="more">${ic('more')}</span></div>` : ''}`;
   };
+  // A cover letter card; `extra` is what the scene has typed at the end of the second answer so far.
+  const count = (t) => `공백 포함 ${t.length.toLocaleString()}자 · 공백 제외 ${t.replace(/\s/g, '').length.toLocaleString()}자`;
+  const card = ([q, a], n) => `
+    <div class="clcard" data-card="${n}">
+      <div class="clq">${ic('grip')}<span class="cln">${n}</span><span class="clt">${q}</span><span class="more">${ic('more')}</span></div>
+      <div class="cla" data-at="cl:answer:${n}"><span class="ans">${a}</span><i class="caret"></i></div>
+      <div class="clc">${count(a)}</div>
+    </div>`;
   const lensbox = (rows, cls = '') => `<div class="lensbox ${cls}"><span class="glass"></span><div class="rows">${rows}</div><div class="lcopy"></div></div>`;
   const masterList = (doc) => {
     const n = DATES[doc].length;
@@ -150,7 +177,7 @@ const SHOWCASE = {
         <p class="sec">내 문서</p>
         ${Object.entries(MASTERS).map(([k, m]) => `<div class="row" data-at="row:${k}" data-item="${k}">${ic(m.icon)}<span class="t">${m.title}</span><span class="meta">v${DATES[k].length}</span></div>`).join('')}
         <div class="add">${ic('plus')}문서 추가</div>
-        <p class="sec gap">공고</p>
+        <p class="sec gap order-row">공고<span class="order">내가 정한 순서${ic('sort')}</span></p>
         ${APPS.map(([k, name, st]) => {
           const row = `<div class="row"${APPINFO[k] ? ` data-at="row:${k}"` : ''} data-item="${k}"><img src="assets/app/${k}.png" alt=""><span class="t">${name}</span><span class="meta" data-status-of="${k}">${STATUS[st]}</span></div>`;
           return k === NEW_APP ? `<div class="grow"><div>${row}</div></div>` : row;
@@ -164,6 +191,7 @@ const SHOWCASE = {
       <div class="dview doc backdrop"><div class="paper">
         ${['resume', 'portfolio', 'tailored', 'daangn'].flatMap((d) => DATES[d].map((_, i) => `<iframe data-doc="${d}:${i + 1}" data-src="${DOCS}${d}/v${i + 1}/index.html" tabindex="-1" aria-hidden="true" title=""></iframe>`)).join('')}
       </div></div>
+      <div class="dview cover"><div class="cards">${COVER.map((c, i) => card(c, i + 1)).join('')}</div><span class="cl-add">${ic('plus')}</span></div>
       <div class="dview posting" data-at="post:scroll:560"><img src="assets/app/posting.png" alt="" width="838" height="2000" loading="lazy"></div>
       <div class="dview cmp">
         <div class="split">
@@ -189,7 +217,10 @@ const SHOWCASE = {
               <span class="line"><i></i></span>
               <div class="stp s1"><span class="ic">${ic('plane')}</span><b>제출 완료</b><small>${SUBMITTED_ON}</small></div>
             </div></div>
-            <button class="solid" type="button" tabindex="-1" data-at="status:submit"><span>제출 완료로 표시</span></button>
+            <div class="acts">
+              <button class="solid main" type="button" tabindex="-1" data-at="status:submit"><b>제출 완료로 표시</b><span>제출 완료로 표시</span></button>
+              <button class="solid close" type="button" tabindex="-1"><b>제출 완료로 표시</b><span>마감으로 표시</span></button>
+            </div>
           </div>
           <p class="sec">공고</p>
           <div class="row jd" data-at="app:jd" data-item="jd">${ic('page')}<span class="t">공고 내용</span><span class="host"></span></div>`, 'pinned')}
@@ -206,6 +237,7 @@ const SHOWCASE = {
           <span class="btn-in toggle" data-at="tb:compare">${ic('split')}<span class="label"><span style="visibility:hidden">이전 버전과 비교</span></span></span>
         </div>
         <div class="cap pdf-cap" hidden><span class="btn-in">${ic('pdf')}PDF로 저장</span></div>
+        <div class="cap finder-cap" hidden><span class="btn-in">${ic('folder')}Finder에서 보기</span></div>
         <div class="cap web-cap" hidden><span class="btn-in">${ic('open')}브라우저에서 열기</span></div>
       </div>
     </header>
@@ -230,7 +262,7 @@ const SHOWCASE = {
   /* State: what the window shows. `act` is every control the demo (or a visitor) can press. */
   const INITIAL = {
     sel: null, ver: { resume: 4, portfolio: 3 }, item: 'jd', comparing: false, mode: 'split',
-    added: false, sheet: null, postY: 0,
+    added: false, sheet: null, postY: 0, typed: '', writing: false,
     status: Object.fromEntries(APPS.map(([k, , s]) => [k, s])),
   };
   const clone = (s) => JSON.parse(JSON.stringify(s));
@@ -238,10 +270,11 @@ const SHOWCASE = {
 
   function act(s, at) {
     const [kind, a, b] = at.split(':');
-    if (kind === 'row') { s.sel = a; s.comparing = false; s.postY = 0; if (APPINFO[a]) s.item = DATES[APPINFO[a].doc].length; } // an application opens on its latest resume; 공고 내용 shows the posting
+    if (kind === 'row') { s.sel = a; s.comparing = false; s.postY = 0; s.writing = false; if (APPINFO[a]) s.item = DATES[APPINFO[a].doc].length; } // an application opens on its latest resume; 공고 내용 shows the posting
     if (kind === 'ver' && MASTERS[a]) s.ver[a] = +b;
     else if (kind === 'ver') s.item = +b;
-    if (kind === 'app' && !APPINFO[s.sel]?.noPosting) { s.item = a; s.postY = 0; }
+    if (kind === 'app' && (a === 'cl' ? APPINFO[s.sel]?.cover : !APPINFO[s.sel]?.noPosting)) { s.item = a; s.postY = 0; s.writing = false; }
+    if (kind === 'cl' && a === 'answer' && s.item === 'cl') { s.writing = true; s.typed = CL_TYPED; }
     if (at === 'sb:addApp' && !s.added) s.sheet = { phase: 'input', url: '' };
     // NewApplicationSheet: 불러오기 loads, then 공고 추가 adds it and selects it. 취소 while loading goes back to the URL.
     if (kind === 'sheet' && s.sheet) {
@@ -361,7 +394,10 @@ const SHOWCASE = {
     }
     if (info) {
       appView.dataset.status = s.status[s.sel];
-      $('.solid span').textContent = s.status[s.sel] === 'preparing' ? '제출 완료로 표시' : '준비 중으로 되돌리기';
+      // StatusTrack.actions: 준비 중 offers 제출 완료로 표시 with 마감으로 표시 beside it; 제출 완료 only the way back.
+      const preparing = s.status[s.sel] === 'preparing';
+      $('.solid.main span').textContent = preparing ? '제출 완료로 표시' : '준비 중으로 되돌리기';
+      $('.solid.close').hidden = !preparing;
     }
     let docKey = null;
     if (kind === 'master') {
@@ -377,16 +413,18 @@ const SHOWCASE = {
       shown.lensApp = s.sel;
       // A lens covers only its own rows: moving between the pinned and the scrolling rows makes it appear anew.
       placeLens(pinned, s.item === 'jd' ? $('.rows [data-item="jd"]', pinned) : null, fresh);
-      const pick = () => placeLens(list, s.item === 'jd' ? null : $(`.rows [data-item="${info.doc}:${s.item}"]`, list), fresh);
+      const row = s.item === 'jd' ? null : s.item === 'cl' ? '[data-item="cl"]' : `[data-item="${info.doc}:${s.item}"]`;
+      const pick = () => placeLens(list, row && $('.rows ' + row, list), fresh);
       pick();
       later(pick, 300); // the add slots fold away when submitted, and the row moves up
-      if (s.item !== 'jd') docKey = `${info.doc}:${s.item}`;
+      if (typeof s.item === 'number') docKey = `${info.doc}:${s.item}`;
     }
     $$('.paper iframe[data-doc]').forEach((f) => f.classList.toggle('on', f.dataset.doc === docKey));
 
     // Detail views
-    const view = kind === 'none' ? 'empty' : docKey ? 'doc' : 'posting';
-    ['empty', 'doc', 'posting'].forEach((v) => $('.dview.' + v).classList.toggle('on', v === view));
+    const view = kind === 'none' ? 'empty' : docKey ? 'doc' : s.item === 'cl' ? 'cover' : 'posting';
+    ['empty', 'doc', 'cover', 'posting'].forEach((v) => $('.dview.' + v).classList.toggle('on', v === view));
+    renderCover();
     $('.dview.cmp').classList.toggle('on', s.comparing);
     const ck = compareKey(s);
     if (ck && shown.cmp !== ck) {
@@ -419,6 +457,7 @@ const SHOWCASE = {
     $('.cmp-cap').hidden = view !== 'doc';
     $('.pdf-cap').hidden = view !== 'doc';
     $('.web-cap').hidden = view !== 'posting';
+    $('.finder-cap').hidden = view !== 'cover';
     toggle.classList.toggle('on', s.comparing);
     toggle.classList.toggle('off', view === 'doc' && !canCompare(s));
     rise($('.label', toggle), s.comparing ? '비교 끄기' : '이전 버전과 비교');
@@ -445,6 +484,15 @@ const SHOWCASE = {
     shown.kind = kind;
     shown.comparing = s.comparing;
     if (app.classList.contains('instant')) { void app.offsetWidth; app.classList.remove('instant'); }
+  }
+
+  /* The cover letter: only the second answer and its count change while the scene types. */
+  function renderCover() {
+    const cardEl = $('.clcard[data-card="2"]');
+    const text = COVER[1][1] + state.typed;
+    $('.ans', cardEl).textContent = text;
+    $('.clc', cardEl).textContent = count(text);
+    cardEl.classList.toggle('writing', state.writing);
   }
 
   /* The 공고 추가 sheet (NewApplicationSheet): only the URL text changes while typing. */
@@ -488,6 +536,11 @@ const SHOWCASE = {
     const a = app.getBoundingClientRect();
     const r = el.getBoundingClientRect();
     const k = a.width / 1512;
+    // An answer is clicked at the end of its text, where the typing goes.
+    if (el.matches('.cla')) {
+      const end = el.querySelector('.caret').getBoundingClientRect();
+      return { x: (end.left - a.left) / k + 4, y: (end.top - a.top + end.height / 2) / k };
+    }
     const dx = el.matches('.posting') ? r.width / k / 2 : Math.min(r.width / k / 2, 70);
     return { x: (r.left - a.left) / k + dx, y: (r.top - a.top + r.height / 2) / k };
   }
@@ -536,8 +589,9 @@ const SHOWCASE = {
       if (step.type) {
         for (let n = 1; n <= step.type.length; n++) {
           if (token !== playing) return;
-          state.sheet.url = step.type.slice(0, n);
-          renderSheet();
+          const text = step.type.slice(0, n);
+          if (step.at === 'sheet:url') { state.sheet.url = text; renderSheet(); }
+          else { state.writing = true; state.typed = text; renderCover(); }
           await wait(SHOWCASE.key);
         }
         state = act(state, step.at);
