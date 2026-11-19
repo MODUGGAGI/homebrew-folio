@@ -80,6 +80,9 @@ code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .88em;
 .btn-primary { background: #2f6ee0; color: #fff; box-shadow: none; }
 .btn svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .btn-primary:hover { background: #3a78e8; }
+/* The hero download: a filled Apple mark (Simple Icons, CC0) instead of the stroked arrow. */
+.btn:has(svg.apple) { font-weight: 600; }
+.btn svg.apple { width: 18px; height: 18px; fill: currentColor; stroke: none; margin-top: -3px; }
 
 
 /* RisingLetters: each letter rises and fades in, 0.06s stagger. No blur: animating a blur repaints every frame,
