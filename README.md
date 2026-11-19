@@ -18,6 +18,8 @@ brew install --cask folio
 
 `Folio.dmg`를 열었을 때의 창 모양(배경, 아이콘 위치, 창 크기)은 `dmg/`에 있습니다. 배경은 `dmg/background.svg`를 고친 뒤 `swift render-background.swift`로, 그다음 `dmg/make-template.sh`로 `dmg/template.dmg`를 다시 만들고 결과 파일을 커밋합니다. 아이콘 위치와 창 크기도 `dmg/make-template.sh`에서 고칩니다.
 
+서명 스크립트는 접미사 없는 정식 릴리스에서만 사용 기록의 시험 표시(`FolioTelemetryTestMode`)를 끕니다. 랜딩 페이지의 방문 측정(GoatCounter)을 포함한 구조와 시험 방법은 `MODUGGAGI/folio`의 `TELEMETRY.md`에 있습니다.
+
 비밀값: `FOLIO_DEPLOY_KEY`, `DEVELOPER_ID_P12`, `DEVELOPER_ID_P12_PASSWORD`, `ASC_KEY_P8`, `ASC_KEY_ID`, `ASC_ISSUER_ID`, `SPARKLE_ED_PRIVATE_KEY`.
 
 ## 랜딩 페이지
