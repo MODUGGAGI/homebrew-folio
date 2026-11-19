@@ -12,7 +12,9 @@ brew install --cask folio
 
 ## 릴리스
 
-`MODUGGAGI/folio`에서 `scripts/release.sh 1.2.0`을 실행합니다. 이 저장소의 `release` workflow가 빌드, Developer ID 서명, 공증, staple, Release 업로드, `Casks/folio.rb` 갱신을 합니다.
+`MODUGGAGI/folio`의 `main`에 새 `VERSION`이 합쳐지면 그 저장소의 workflow가 태그를 만들고 이 저장소의 `release` workflow를 시작합니다. 손으로는 `MODUGGAGI/folio`에서 `scripts/release.sh 1.2.0`을 실행합니다. 전체 흐름은 `MODUGGAGI/folio`의 `RELEASING.md`에 있습니다. 이 저장소의 `release` workflow가 빌드, Developer ID 서명, 공증, staple, Release 업로드, `Casks/folio.rb` 갱신을 합니다.
+
+PR을 올리면 `check` workflow가 릴리스 스크립트의 문법과 appcast, cask 형식을 검사합니다.
 
 `build` job만 folio 코드를 실행하고 서명 비밀값을 받지 않습니다. `sign` job은 이 저장소의 스크립트만 실행합니다.
 
