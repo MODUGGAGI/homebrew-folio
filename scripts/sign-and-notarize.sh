@@ -16,12 +16,12 @@ bundle_id=io.github.moduggagi.folio
 # Sparkle reads updates from the latest release; the public key checks they were signed with SPARKLE_ED_PRIVATE_KEY.
 feed=https://github.com/MODUGGAGI/homebrew-folio/releases/latest/download/appcast.xml
 ed_public_key=4pTKp7+0XM6oULgZ9evC19nlYVt+BvMKqPXcjQJ8+KU=
-# TelemetryDeck app id for anonymous usage events (not a secret: it only names where events go).
-# folio's scripts/bundle.sh marks every build as a test build; only a real release (no suffix in the
-# version) has that turned off here, so nothing but a published release counts as real use.
+# TelemetryDeck app ids for anonymous usage events (not secrets: they only name where events go).
+# "Folio" counts real use and "Folio Dev" takes everything else. folio's scripts/bundle.sh builds with the
+# Dev id; only a real release (no suffix in the version) gets the Folio id here, so a trial release
+# (1.2.0-test1) and a local build never count as real use.
 telemetry_app_id=81368791-0473-4E77-9403-10931CF07C3B
-telemetry_test_mode=false
-[[ "$version" == *-* ]] && telemetry_test_mode=true
+[[ "$version" == *-* ]] && telemetry_app_id=CA439BA5-E092-4C7B-B4C8-5AF41116A662
 tmp="${RUNNER_TEMP:-$(mktemp -d)}"
 
 plist="$app/Contents/Info.plist"
@@ -32,11 +32,11 @@ plist="$app/Contents/Info.plist"
     -c "Add :SUPublicEDKey string $ed_public_key" \
     -c "Add :SUEnableAutomaticChecks bool true" \
     -c "Add :SUAutomaticallyUpdate bool true" "$plist"
-# Delete first: a tag from before bundle.sh wrote these keys has none, a newer one has both.
+# Delete first: a tag from before bundle.sh wrote the id has none. FolioTelemetryTestMode is from the
+# first version of this, which told test events apart by a flag instead of by app.
 /usr/libexec/PlistBuddy -c "Delete :FolioTelemetryAppID" "$plist" 2>/dev/null || true
 /usr/libexec/PlistBuddy -c "Delete :FolioTelemetryTestMode" "$plist" 2>/dev/null || true
-/usr/libexec/PlistBuddy -c "Add :FolioTelemetryAppID string $telemetry_app_id" \
-    -c "Add :FolioTelemetryTestMode bool $telemetry_test_mode" "$plist"
+/usr/libexec/PlistBuddy -c "Add :FolioTelemetryAppID string $telemetry_app_id" "$plist"
 
 identity="${SIGN_IDENTITY:-}"
 if [[ -z "$identity" ]]; then
