@@ -26,7 +26,7 @@ git pull --rebase
 - `docs/assets/js/app-demo.js`, `docs/assets/css/app-demo.css`: HTML로 다시 그린 Folio 창. 장면과 시간은 파일 맨 위 `SHOWCASE` 하나에서 바꾼다
 - `docs/assets/docs/`: 쇼케이스에 뜨는 가상 인물(홍길동) 이력서, 포트폴리오, 공고용 이력서
 - `docs/assets/app/`: 회사 파비콘과 네이버웹툰 공고 화면
-- `docs/assets/shots/real.png`: 실제 앱 화면 한 장 (공유 미리보기 이미지)
+- `docs/assets/shots/og.png`: 링크 공유 미리보기 이미지(1200x630). 히어로의 로고와 제목을 찍은 것이다
 - `docs/assets/js/metal.js`: 복사 버튼의 메탈 링([metal-fx](https://www.npmjs.com/package/metal-fx), MIT). 빌드 결과물이다. 원본은 `landing/metal/`이고, WebGL2가 없으면 CSS 링이 대신 보인다
 - `landing/capture/`: 실제 앱 화면을 찍을 때 쓰는 데모 라이브러리 생성기
 
