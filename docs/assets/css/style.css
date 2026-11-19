@@ -532,3 +532,31 @@ code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .88em;
 .cmdbar .copy-tip.on { opacity: 1; transform: none; }
 .term-bar .copy-tip.on { opacity: 1; transform: translate(0, -50%); }
 @media (prefers-reduced-motion: reduce) { .copy-tip { transition: none; } }
+
+/* Header: FAQ always on the right; the download button fades in to its left once the hero's button is gone. */
+.nav-end { display: flex; align-items: center; gap: 20px; }
+.nav-link { color: var(--muted); text-decoration: none; font-size: 15px; font-weight: 600; transition: color var(--feedback); }
+.nav-link:hover { color: var(--pale); }
+
+/* FAQ: one line per question; the answer opens under it. */
+.faq { max-width: 1240px; margin: 0 auto; padding: var(--section-gap) var(--gutter) 0; }
+.faq .section-title { text-align: center; font-size: clamp(26px, 3.4vw, 44px); margin-bottom: 40px; }
+.faq-list { max-width: 760px; margin: 0 auto; border-top: 1px solid var(--line); }
+.faq-item { border-bottom: 1px solid var(--line); }
+.faq-item summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 22px 4px;
+  font-size: 18px; font-weight: 600; color: var(--pale); cursor: pointer; list-style: none; transition: color var(--feedback);
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary:hover { color: #fff; }
+.faq-chev { flex: none; width: 18px; height: 18px; fill: none; stroke: var(--muted); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: transform var(--state); }
+.faq-item[open] .faq-chev { transform: rotate(180deg); }
+.faq-a { padding: 0 4px 24px; color: rgba(235, 235, 245, .72); font-size: 16px; line-height: 1.75; }
+.faq-item[open] .faq-a { animation: faqIn var(--state) both; }
+@keyframes faqIn { from { opacity: 0; transform: translateY(-4px); } }
+.faq-a p { margin: 0 0 12px; }
+.faq-a ul, .faq-a ol { margin: 0 0 12px; padding-left: 1.3em; }
+.faq-a li { margin: 0 0 8px; }
+.faq-a code { font-family: "SF Mono", ui-monospace, Menlo, monospace; font-size: 14px; color: var(--pale); background: rgba(255, 255, 255, .06); padding: 2px 6px; border-radius: 6px; word-break: break-all; }
+.faq-a .faq-note { font-size: 14px; color: var(--muted); margin-bottom: 0; }
+@media (prefers-reduced-motion: reduce) { .faq-item[open] .faq-a { animation: none; } }

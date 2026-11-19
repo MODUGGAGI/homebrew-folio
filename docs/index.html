@@ -25,7 +25,10 @@
     <img src="assets/icon.png" alt="" width="32" height="32"> Folio
   </a>
   <!-- Shown only after the hero's own install button has scrolled away (main.js) -->
-  <a class="btn btn-primary nav-cta" href="#install" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5v8M4.8 7.6 8 10.8l3.2-3.2M3 13.5h10"/></svg>다운로드</a>
+  <div class="nav-end">
+    <a class="btn btn-primary nav-cta" href="#install" tabindex="-1" aria-hidden="true"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5v8M4.8 7.6 8 10.8l3.2-3.2M3 13.5h10"/></svg>다운로드</a>
+    <a class="nav-link" href="#faq">FAQ</a>
+  </div>
 </header>
 
 <main id="main">
@@ -240,6 +243,51 @@
     </ol>
   </div>
   <p class="req">macOS 26 이상. Apple Silicon과 Intel 모두 지원.</p>
+</section>
+
+<section class="faq" id="faq" aria-labelledby="faq-title">
+  <h2 class="section-title" id="faq-title" data-rise>자주 묻는 질문</h2>
+  <div class="faq-list">
+    <details class="faq-item">
+      <summary>정말 내 Mac에서만 관리되나요?<svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></summary>
+      <div class="faq-a">
+        <p>네. 이력서와 포트폴리오, 공고는 모두 내 Mac의 폴더에만 저장돼요.<br>가입도 서버도 없어서 Folio가 내 파일을 어디로도 보내지 않아요.</p>
+        <p>인터넷은 세 가지에만 써요.</p>
+        <ul>
+          <li>공고 주소를 넣었을 때 그 공고 페이지 불러오기</li>
+          <li>공고 옆에 붙는 회사 아이콘 가져오기</li>
+          <li>Folio 새 버전 확인하기</li>
+        </ul>
+        <p class="faq-note">※ AI 에이전트를 연결하면 그 AI가 읽은 내용은 해당 AI 서비스로 전달돼요.<br>어떤 AI를 연결할지는 직접 고를 수 있어요.</p>
+      </div>
+    </details>
+    <details class="faq-item">
+      <summary>파일은 어떻게 관리되나요?<svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></summary>
+      <div class="faq-a">
+        <p>모든 파일은 이 폴더 안에 보통 파일로 저장돼요.</p>
+        <p><code>~/Library/Application Support/Folio/Library</code></p>
+        <ul>
+          <li>버전마다 폴더가 따로 생기고 넣은 파일(PDF나 HTML)이 그대로 들어가요.</li>
+          <li>데이터베이스가 없어서 폴더 하나만 복사하면 백업 끝이에요.</li>
+          <li>앱의 'Finder에서 보기'로 폴더를 바로 열 수 있어요.</li>
+          <li>지운 항목은 30일 동안 앱 휴지통에 있다가 사라져요.</li>
+        </ul>
+      </div>
+    </details>
+    <details class="faq-item">
+      <summary>Homebrew 설치 명령어는 왜 세 줄인가요?<svg class="faq-chev" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 6l4 4 4-4"/></svg></summary>
+      <div class="faq-a">
+        <p>보통 앱은 <code>brew install --cask 앱이름</code> 한 줄이면 돼요.<br>Homebrew 공식 목록에 들어 있는 앱이라서 그래요.</p>
+        <p>Folio는 아직 공식 목록에 없어서 Folio 전용 저장소(tap)에서 설치해요.</p>
+        <ol>
+          <li><code>brew tap moduggagi/folio</code><br>Folio 저장소를 Homebrew에 추가해요.</li>
+          <li><code>brew trust moduggagi/folio</code><br>이 저장소에서 설치해도 된다고 Homebrew에 알려 줘요.<br>최신 Homebrew는 공식 목록 밖의 저장소를 이 단계 없이 설치하지 않아요.</li>
+          <li><code>brew install --cask folio</code><br>Folio를 설치해요.</li>
+        </ol>
+        <p>이 과정은 처음 한 번만 하면 돼요.<br>그다음 업데이트는 앱이 알려 줘요.</p>
+      </div>
+    </details>
+  </div>
 </section>
 
 </main>
