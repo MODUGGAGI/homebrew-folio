@@ -82,11 +82,12 @@ code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .88em;
 .btn-primary:hover { background: #3a78e8; }
 
 
-/* RisingLetters: each letter rises from blur, 0.06s stagger */
+/* RisingLetters: each letter rises and fades in, 0.06s stagger. No blur: animating a blur repaints every frame,
+   which stutters on computers without a strong GPU. */
 [data-rise] .w { display: inline-block; white-space: nowrap; }
-[data-rise] .ch { display: inline-block; opacity: 0; transform: translateY(.45em); filter: blur(10px); }
+[data-rise] .ch { display: inline-block; opacity: 0; transform: translateY(.45em); }
 [data-rise].in .ch { animation: letterIn .55s cubic-bezier(.3, 1.2, .5, 1) forwards; animation-delay: calc(var(--i) * .06s); }
-@keyframes letterIn { to { opacity: 1; transform: none; filter: blur(0); } }
+@keyframes letterIn { to { opacity: 1; transform: none; } }
 
 .section-title { font-size: clamp(30px, 4.4vw, 56px); line-height: 1.15; letter-spacing: -.03em; font-weight: 700; margin: 0 0 24px; }
 
@@ -122,11 +123,13 @@ code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .88em;
   filter: blur(40px);
 }
 .hero-mark svg { position: relative; width: 100%; height: auto; overflow: visible; }
-.hero-mark .layer { opacity: 0; transform: translateY(-90px); filter: blur(12px); animation: stackIn .5s cubic-bezier(.32, .72, 0, 1) forwards; animation-delay: calc(.25s + var(--i) * .18s); }
-.hero-mark .layer > use { filter: drop-shadow(10px 22px 22px rgba(0, 0, 0, .45)); }
+.hero-mark .layer { opacity: 0; transform: translateY(-90px); animation: stackIn .5s cubic-bezier(.32, .72, 0, 1) forwards; animation-delay: calc(.25s + var(--i) * .18s); }
+/* Each layer's shadow comes in only after it lands, so the big blurred shadows are not redrawn while it falls. */
+.hero-mark .layer > use { filter: drop-shadow(10px 22px 22px rgba(0, 0, 0, .45)); animation: shadowIn .25s ease-out both; animation-delay: calc(.7s + var(--i) * .18s); }
+@keyframes shadowIn { from { filter: none; } }
 /* the glass face casts no drop shadow: it would show through the glass as a gray cast */
 .hero-mark text { fill: var(--muted); font: 600 28px "Pretendard Variable", system-ui, sans-serif; opacity: 0; animation: fadeIn .28s ease-out forwards; animation-delay: calc(.6s + var(--i) * .18s); }
-@keyframes stackIn { to { opacity: 1; transform: none; filter: blur(0); } }
+@keyframes stackIn { to { opacity: 1; transform: none; } }
 @keyframes fadeIn { to { opacity: 1; } }
 
 /* Quiet segmented control (the app's SlidingPicker): a faint track, a light-gray thumb that slides */

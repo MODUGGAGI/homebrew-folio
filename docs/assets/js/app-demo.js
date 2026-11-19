@@ -162,16 +162,16 @@ const SHOWCASE = {
     <section class="detail">
       <div class="dview empty"><svg viewBox="0 0 16 13" aria-hidden="true"><rect x=".8" y=".8" width="14.4" height="11.4" rx="2.4"/><path d="M5.6.8v11.4M2.6 3.6h1.4M2.6 5.6h1.4M2.6 7.6h1.4"/></svg><p>왼쪽에서 문서나 공고를 골라 주세요</p></div>
       <div class="dview doc backdrop"><div class="paper">
-        ${['resume', 'portfolio', 'tailored', 'daangn'].flatMap((d) => DATES[d].map((_, i) => `<iframe data-doc="${d}:${i + 1}" src="${DOCS}${d}/v${i + 1}/index.html" tabindex="-1" aria-hidden="true" title=""></iframe>`)).join('')}
+        ${['resume', 'portfolio', 'tailored', 'daangn'].flatMap((d) => DATES[d].map((_, i) => `<iframe data-doc="${d}:${i + 1}" data-src="${DOCS}${d}/v${i + 1}/index.html" tabindex="-1" aria-hidden="true" title=""></iframe>`)).join('')}
       </div></div>
       <div class="dview posting" data-at="post:scroll:560"><img src="assets/app/posting.png" alt="" width="838" height="2000" loading="lazy"></div>
       <div class="dview cmp">
         <div class="split">
-          <div class="cpane" style="left:0"><div class="phead cmp-old-head"></div><div class="backdrop"></div><div class="paper"><iframe class="on cmp-old" src="${DOCS}tailored/v1/index.html" tabindex="-1" aria-hidden="true" title=""></iframe></div></div>
-          <div class="cpane"><div class="phead cmp-new-head"></div><div class="backdrop"></div><div class="paper"><iframe class="on cmp-new" src="${DOCS}tailored/diff.html" tabindex="-1" aria-hidden="true" title=""></iframe></div></div>
+          <div class="cpane" style="left:0"><div class="phead cmp-old-head"></div><div class="backdrop"></div><div class="paper"><iframe class="on cmp-old" data-src="${DOCS}tailored/v1/index.html" tabindex="-1" aria-hidden="true" title=""></iframe></div></div>
+          <div class="cpane"><div class="phead cmp-new-head"></div><div class="backdrop"></div><div class="paper"><iframe class="on cmp-new" data-src="${DOCS}tailored/diff.html" tabindex="-1" aria-hidden="true" title=""></iframe></div></div>
         </div>
         <div class="inline">
-          <div class="cpane"><div class="backdrop"></div><div class="paper"><iframe class="on cmp-new" src="${DOCS}tailored/diff.html" tabindex="-1" aria-hidden="true" title=""></iframe></div></div>
+          <div class="cpane"><div class="backdrop"></div><div class="paper"><iframe class="on cmp-new" data-src="${DOCS}tailored/diff.html" tabindex="-1" aria-hidden="true" title=""></iframe></div></div>
         </div>
         <div class="bbar"><span class="cmp-range"></span><span class="counts"><span><b class="sw i">가</b><em data-count="ins"></em></span><span><b class="sw d">가</b><em data-count="del"></em></span></span></div>
       </div>
@@ -587,6 +587,14 @@ const SHOWCASE = {
     if (!playing) playScene(0);
   }, { threshold: 0.35 });
   firstView.observe(frame);
+
+  // The documents in the window load only when the window comes near the screen, not while the hero animates.
+  const loadDocs = new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) return;
+    loadDocs.disconnect();
+    $$('iframe[data-src]').forEach((f) => { if (!f.getAttribute('src')) f.src = f.dataset.src; });
+  }, { rootMargin: '600px 0px' });
+  loadDocs.observe(frame);
 
   /* First paint, then real notes and diff counts when served over HTTP. */
   function counts() { $$('[data-count]').forEach((el) => { el.textContent = `${el.dataset.count === 'ins' ? '추가' : '삭제'} ${diffCount[el.dataset.count]}곳`; }); }
