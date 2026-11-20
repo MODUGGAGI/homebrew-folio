@@ -1,6 +1,6 @@
 cask "folio" do
-  version "1.2.1"
-  sha256 "4bed3aea31bec2e17c6080218f27fac6a63aa40185b900e5477cb972b46a37cf"
+  version "1.3.0"
+  sha256 "d8d900612b717b12a6133042f1fb531728af3cf876b147d48917bb349ee6f308"
 
   url "https://github.com/MODUGGAGI/homebrew-folio/releases/download/v#{version}/Folio.zip"
   name "Folio"
