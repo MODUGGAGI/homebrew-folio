@@ -213,3 +213,36 @@ if (relList) {
     })
     .catch(() => {});
 }
+
+/* Light and dark: light by default, the choice remembered. The new theme opens out from the toggle as a circle
+   where the browser can (View Transitions); otherwise, or with Reduce Motion, it switches at once. */
+(() => {
+  const toggle = document.querySelector('.theme-toggle');
+  if (!toggle) return;
+  const root = document.documentElement;
+  const meta = document.querySelector('meta[name="theme-color"]');
+  const still = matchMedia('(prefers-reduced-motion: reduce)');
+  const label = () => {
+    const dark = root.dataset.theme === 'dark';
+    toggle.setAttribute('aria-checked', String(dark));
+  };
+  const apply = (dark) => {
+    if (dark) root.dataset.theme = 'dark'; else delete root.dataset.theme;
+    if (meta) meta.content = dark ? '#05070F' : '#E9ECF6';
+    try { localStorage.setItem('folio-theme', dark ? 'dark' : 'light'); } catch (e) { /* private mode: not remembered */ }
+    label();
+  };
+  label();
+  toggle.addEventListener('click', () => {
+    const dark = root.dataset.theme !== 'dark';
+    if (!document.startViewTransition || still.matches) return apply(dark);
+    const r = toggle.getBoundingClientRect();
+    const x = r.left + r.width / 2;
+    const y = r.top + r.height / 2;
+    const end = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    document.startViewTransition(() => apply(dark)).ready.then(() => {
+      root.animate({ clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${end}px at ${x}px ${y}px)`] },
+        { duration: 650, easing: 'cubic-bezier(.32, .72, 0, 1)', pseudoElement: '::view-transition-new(root)' });
+    });
+  });
+})();
