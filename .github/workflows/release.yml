@@ -36,6 +36,10 @@ jobs:
           ref: refs/tags/${{ inputs.tag }}
           ssh-key: ${{ secrets.FOLIO_DEPLOY_KEY }}
           persist-credentials: false
+      # folio links its Rust core (core/) into the app as a static library; bundle.sh builds it with cargo.
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
       - run: scripts/bundle.sh
       # ditto keeps the bundle's symlinks and permissions, which upload-artifact alone drops.
       - run: ditto -c -k --keepParent build/Folio.app Folio-unsigned.zip
