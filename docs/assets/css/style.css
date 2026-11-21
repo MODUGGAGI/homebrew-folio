@@ -490,7 +490,7 @@ code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .88em;
 .showcase .caption { min-height: 3.1em; }
 .cap-note { display: block; margin-top: 4px; font-size: 13px; color: rgba(14, 21, 51, .62); }
 /* the pile of "final" files the lineage section starts from */
-.lineage-sub .fname { display: inline-block; margin: 2px 2px; padding: 1px 8px; border-radius: 6px; font: 14px/1.6 ui-monospace, "SF Mono", Menlo, monospace; color: rgba(14, 21, 51, .90); background: rgba(14, 21, 51, .06); border: 1px solid rgba(14, 21, 51, .08); text-decoration: line-through; text-decoration-color: rgba(255, 120, 120, .6); }
+.lineage-sub .fname { display: inline-block; margin: 2px 2px; padding: 1px 8px; border-radius: 6px; font: 14px/1.6 ui-monospace, "SF Mono", Menlo, monospace; color: rgba(14, 21, 51, .90); background: rgba(14, 21, 51, .06); border: 1px solid rgba(14, 21, 51, .08); text-decoration: line-through; text-decoration-color: #e5484d; text-decoration-thickness: 1.5px; }
 @media (max-width: 760px) { .lineage-sub br { display: none; } }
 .features .section-title, #mcp-title { font-size: clamp(26px, 3.4vw, 44px); }
 /* Feature card icons: bare line icons, no tile. */
@@ -653,7 +653,7 @@ code { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: .88em;
 :root[data-theme="dark"] .lineage .flow.wt { fill: #7dffb4; }
 :root[data-theme="dark"] .lineage .ping { stroke: #8EB1EE; }
 :root[data-theme="dark"] .cap-note { color: rgba(235, 235, 245, .42); }
-:root[data-theme="dark"] .lineage-sub .fname { color: rgba(235, 235, 245, .7); background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .08); }
+:root[data-theme="dark"] .lineage-sub .fname { color: rgba(235, 235, 245, .7); background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .08); text-decoration-color: #ff6b6b; }
 :root[data-theme="dark"] .card-ic svg { stroke: #b0cbf6; }
 :root[data-theme="dark"] .mcp-note { color: rgba(235, 235, 245, .45); }
 :root[data-theme="dark"] .pop-card > a { color: #8eb1ee; }
