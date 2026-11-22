@@ -17,7 +17,7 @@ bundle_id=io.github.moduggagi.folio
 feed=https://github.com/MODUGGAGI/homebrew-folio/releases/latest/download/appcast.xml
 ed_public_key=4pTKp7+0XM6oULgZ9evC19nlYVt+BvMKqPXcjQJ8+KU=
 # TelemetryDeck app ids for anonymous usage events (not secrets: they only name where events go).
-# "Folio" counts real use and "Folio Dev" takes everything else. folio's scripts/bundle.sh builds with the
+# "Folio" counts real use and "Folio Dev" takes everything else. folio's mac/scripts/bundle.sh builds with the
 # Dev id; only a real release (no suffix in the version) gets the Folio id here, so a trial release
 # (1.2.0-test1) and a local build never count as real use.
 telemetry_app_id=81368791-0473-4E77-9403-10931CF07C3B

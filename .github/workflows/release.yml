@@ -40,9 +40,13 @@ jobs:
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: aarch64-apple-darwin
-      - run: scripts/bundle.sh
+      # folio keeps its Mac app in mac/ from MODUGGAGI/folio#52 on; earlier tags have it at the top.
       # ditto keeps the bundle's symlinks and permissions, which upload-artifact alone drops.
-      - run: ditto -c -k --keepParent build/Folio.app Folio-unsigned.zip
+      - run: |
+          app_dir=.
+          [ -d mac ] && app_dir=mac
+          "$app_dir/scripts/bundle.sh"
+          ditto -c -k --keepParent "$app_dir/build/Folio.app" Folio-unsigned.zip
       - uses: actions/upload-artifact@v4
         with:
           name: unsigned
