@@ -20,8 +20,8 @@
 <link rel="manifest" href="manifest.webmanifest">
 <script>try { if (localStorage.getItem("folio-theme") === "dark") { document.documentElement.dataset.theme = "dark"; document.querySelector('meta[name="theme-color"]').content = "#05070F"; } } catch (e) {}</script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="assets/css/style.css?v=20261123a">
-<link rel="stylesheet" href="assets/css/app-demo.css?v=20261123a">
+<link rel="stylesheet" href="assets/css/style.css?v=20261123b">
+<link rel="stylesheet" href="assets/css/app-demo.css?v=20261123b">
 </head>
 <body>
 <a class="skip" href="#main">본문으로 건너뛰기</a>
@@ -55,13 +55,6 @@
     <h1 class="hero-title" data-rise data-rise-now>이력서 버전 관리, 이제 Folio에서</h1>
     <p class="hero-sub">고칠 때마다 남는 버전도, 공고마다 다듬은 사본도<br>전부 내 Mac 안에서 깔끔하게 정리돼요.</p>
     <div class="hero-actions">
-      <div class="cmdbar" role="group" aria-label="Homebrew로 설치">
-        <code><span class="pr">❯</span> <span class="c-cmd">brew</span> <span class="c-sub">tap</span> <span class="c-arg">moduggagi/folio</span> <span class="c-op">&amp;&amp;</span> <span class="c-cmd">brew</span> <span class="c-sub">trust</span> <span class="c-arg">moduggagi/folio</span> <span class="c-op">&amp;&amp;</span> <span class="c-cmd">brew</span> <span class="c-sub">install</span> <span class="c-flag">--cask</span> <span class="c-arg">folio</span></code>
-        <button class="copy metal" type="button" data-goatcounter-click="copy-brew-hero" data-goatcounter-title="brew 명령 복사 (첫 화면)" data-copy="brew tap moduggagi/folio &amp;&amp; brew trust moduggagi/folio &amp;&amp; brew install --cask folio" aria-label="설치 명령 복사">
-          <svg class="ic-copy" viewBox="0 0 16 16" aria-hidden="true"><rect x="5.5" y="5.5" width="8" height="8" rx="1.8"/><path d="M10.5 3.2V3a1.5 1.5 0 0 0-1.5-1.5H4A1.5 1.5 0 0 0 2.5 3v5A1.5 1.5 0 0 0 4 9.5h.3"/></svg>
-          <svg class="ic-done" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg>
-        </button>
-      </div>
       <a class="btn btn-primary" href="https://github.com/MODUGGAGI/homebrew-folio/releases/latest/download/Folio.dmg" data-goatcounter-click="download-dmg-hero" data-goatcounter-title="Folio.dmg 받기 (첫 화면)"><svg class="apple" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" stroke="none" d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>macOS용 다운로드</a>
     </div>
   </div>
@@ -227,10 +220,18 @@
   <h2 class="section-title" id="install-title" data-rise>1분이면 설치 끝</h2>
   <div class="lens-tabs install-tabs" role="tablist" aria-label="설치 방법">
     <span class="lens" aria-hidden="true"></span>
-    <button type="button" role="tab" id="tab-brew" aria-controls="pane-brew" aria-selected="true">Homebrew</button>
-    <button type="button" role="tab" id="tab-zip" aria-controls="pane-zip" aria-selected="false" tabindex="-1">직접 다운로드</button>
+    <button type="button" role="tab" id="tab-zip" aria-controls="pane-zip" aria-selected="true">직접 다운로드</button>
+    <button type="button" role="tab" id="tab-brew" aria-controls="pane-brew" aria-selected="false" tabindex="-1">Homebrew</button>
   </div>
-  <div class="pane" id="pane-brew" role="tabpanel" aria-labelledby="tab-brew">
+  <div class="pane" id="pane-zip" role="tabpanel" aria-labelledby="tab-zip">
+    <ol class="steps">
+      <li><h3>다운로드</h3><p>최신 버전 설치 파일을 받아요.</p><p><a class="btn btn-primary" href="https://github.com/MODUGGAGI/homebrew-folio/releases/latest/download/Folio.dmg" data-goatcounter-click="download-dmg-install" data-goatcounter-title="Folio.dmg 받기 (설치 안내)"><svg class="apple" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" stroke="none" d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>macOS용 다운로드</a></p></li>
+      <li><h3>응용 프로그램으로 옮기기</h3><p>Folio.dmg를 열고<br>창 안의 Folio를 응용 프로그램 폴더로 끌어다 놓아요.</p></li>
+      <li><h3>Folio 열기</h3><p>Apple 공증을 마친 앱이라 바로 열려요.<br>처음 열 때 묻는 창이 뜨면 열기를 누르세요.<br>그다음 업데이트는 앱이 알아서 해요.</p></li>
+    </ol>
+  </div>
+  <p class="req">macOS 26 이상. Apple Silicon과 Intel 모두 지원.</p>
+  <div class="pane" id="pane-brew" role="tabpanel" aria-labelledby="tab-brew" hidden>
     <ol class="steps">
       <li><h3>터미널 열기</h3><p>Spotlight(⌘ 스페이스)에서<br>"터미널"을 찾아 열어요.</p></li>
       <li><h3>명령 붙여 넣기</h3>
@@ -252,14 +253,6 @@
       <li><h3>Folio 열기</h3><p>응용 프로그램 폴더에서 Folio를 열어요.<br>새 버전이 나오면 앱이 알아서 알려 주고 업데이트해요.</p></li>
     </ol>
   </div>
-  <div class="pane" id="pane-zip" role="tabpanel" aria-labelledby="tab-zip" hidden>
-    <ol class="steps">
-      <li><h3>다운로드</h3><p>최신 버전 설치 파일을 받아요.</p><p><a class="btn btn-primary" href="https://github.com/MODUGGAGI/homebrew-folio/releases/latest/download/Folio.dmg" data-goatcounter-click="download-dmg-install" data-goatcounter-title="Folio.dmg 받기 (설치 안내)"><svg class="apple" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" stroke="none" d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/></svg>macOS용 다운로드</a></p></li>
-      <li><h3>응용 프로그램으로 옮기기</h3><p>Folio.dmg를 열고<br>창 안의 Folio를 응용 프로그램 폴더로 끌어다 놓아요.</p></li>
-      <li><h3>Folio 열기</h3><p>Apple 공증을 마친 앱이라 바로 열려요.<br>처음 열 때 묻는 창이 뜨면 열기를 누르세요.<br>그다음 업데이트는 앱이 알아서 해요.</p></li>
-    </ol>
-  </div>
-  <p class="req">macOS 26 이상. Apple Silicon과 Intel 모두 지원.</p>
 </section>
 
 <section class="faq" id="faq" aria-labelledby="faq-title">
@@ -342,9 +335,8 @@
   </ul>
 </footer>
 
-<script src="assets/js/main.js?v=20261123a"></script>
-<script src="assets/js/metal.js?v=20261123a" defer></script>
-<script src="assets/js/app-demo.js?v=20261123a"></script>
+<script src="assets/js/main.js?v=20261123b"></script>
+<script src="assets/js/app-demo.js?v=20261123b"></script>
 <!-- Visits and clicks on [data-goatcounter-click], with no cookies. Local previews are not counted. -->
 <script data-goatcounter="https://folio-cv.goatcounter.com/count" async src="https://gc.zgo.at/count.js"></script>
 </body>
