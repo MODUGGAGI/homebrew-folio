@@ -26,6 +26,6 @@ PR을 올리면 `check` workflow가 릴리스 스크립트의 문법과 appcast,
 
 ## 랜딩 페이지
 
-`docs/`를 GitHub Pages로 서비스합니다: https://moduggagi.github.io/homebrew-folio/
+`docs/`를 GitHub Pages로 서비스합니다: https://follio.page/
 
 고치는 방법과 도구는 [`landing/README.md`](landing/README.md)에 있습니다.

@@ -14,7 +14,7 @@ python3 -m http.server 8765 --directory docs
 
 ## 배포
 
-`docs/`를 고쳐 `main`에 push하면 1~2분 뒤 `https://moduggagi.github.io/homebrew-folio/`에 반영된다. release workflow가 cask와 appcast를 push하므로 push 전에 먼저 받는다.
+`docs/`를 고쳐 `main`에 push하면 1~2분 뒤 `https://follio.page/`에 반영된다. release workflow가 cask와 appcast를 push하므로 push 전에 먼저 받는다.
 
 ```bash
 git pull --rebase
