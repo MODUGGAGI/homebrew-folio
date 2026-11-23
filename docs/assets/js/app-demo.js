@@ -51,6 +51,13 @@ const SHOWCASE = {
         { at: 'app:cl', hold: 900 },
         { at: 'cl:answer:2', type: CL_TYPED, hold: 2200 },
       ] },
+    { tab: '채용 일정 관리', title: '마감일이 모이는 캘린더', text: '공고마다 마감일이 캘린더에 모이고 다가오는 마감부터 차례로 보여 줘요.',
+      steps: [
+        { at: 'sw:calendar', hold: 1700 },
+        { at: 'chip:naver', hold: 1800 },
+        { at: 'chip:webtoon', hold: 2000 },
+        { at: 'cal:back', hold: 1400 },
+      ] },
   ],
 };
 
@@ -92,6 +99,21 @@ const SHOWCASE = {
     ['팀에서 의견이 달랐던 경험과 그때 어떻게 했는지 적어 주세요.',
       '홈 화면 API를 하나로 합치자고 제안했을 때 서버 팀은 응답이 커져 캐시가 어려워진다고 걱정했습니다. 화면별 호출 기록을 모아 어떤 값이 함께 바뀌는지 보여 드렸고, 자주 바뀌는 부분만 따로 떼어 내는 안으로 합의했습니다. 그 결과 첫 화면 호출이 6회에서 2회로 줄었습니다.'],
   ];
+  // The calendar (CalendarView.swift): November 2026, which starts on a Sunday, seen on Thursday the 19th. `day` is
+  // the closing day in November, `time` shows when it closes before 23:59, `urgency` as deadlineUrgency gives it.
+  // `resume` is the posting's newest resume: [version, note, date].
+  const TODAY = 19;
+  const MONTH_DAYS = 30;
+  const CAL = {
+    naver: { role: '[2027 신입] 검색 백엔드 개발', day: 20, time: '10:00', urgency: 'urgent', resume: [1, '이력서 v4에서 검색 서버 경험 중심으로', [11, 18]] },
+    webtoon: { role: APPINFO.webtoon.role, day: 21, time: '17:00', urgency: 'soon', resume: [2, '캐시 수치와 부하 테스트 추가', [11, 17]], cover: true },
+    kakao: { role: '서버 개발자 (신입)', day: 27, resume: [1, '이력서 v4에서 카카오 공고에 맞춤', [11, 15]], cover: true },
+    line: { role: 'Backend Engineer', always: true },
+    daangn: { day: 6 }, baemin: { day: 13 }, toss: { day: 17 },
+  };
+  const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
+  // Fmt.weekday: "11월 20일 금요일". November 1st is a Sunday.
+  const weekday = (d) => `11월 ${d}일 ${WEEKDAYS[(d - 1) % 7]}요일`;
   const STATUS = { preparing: '준비 중', submitted: '제출 완료' };
   // The application the 공고 추가 scene adds; the sidebar starts without it.
   const NEW_APP = 'webtoon';
@@ -131,6 +153,11 @@ const SHOWCASE = {
     grip: '<path d="M3 4.5h10M3 8h10M3 11.5h10"/>',
     sort: '<path d="M5 13V3M2.6 5.4 5 3l2.4 2.4M11 3v10M8.6 10.6 11 13l2.4-2.4"/>',
     link: '<path d="M6.8 9.2a2.6 2.6 0 0 0 3.7 0l2.1-2.1a2.6 2.6 0 0 0-3.7-3.7l-.7.7"/><path d="M9.2 6.8a2.6 2.6 0 0 0-3.7 0L3.4 8.9a2.6 2.6 0 0 0 3.7 3.7l.7-.7"/>',
+    docs: '<rect x="5.2" y="4.6" width="8.6" height="10" rx="1.8"/><path d="M2.6 11.4V3.4c0-1 .8-1.8 1.8-1.8h6.2"/>',
+    cal: '<rect x="1.8" y="2.8" width="12.4" height="11.4" rx="2.4"/><path d="M1.8 6.4h12.4M5.2 1.4v2.6M10.8 1.4v2.6"/>',
+    check: '<path d="M3.6 8.4l2.9 2.9 5.9-6.6"/>',
+    left: '<path d="M10 3.5 5.5 8l4.5 4.5"/>',
+    right: '<path d="M6 3.5 10.5 8 6 12.5"/>',
   };
   const ic = (name) => `<svg viewBox="0 0 16 16" aria-hidden="true">${I[name]}</svg>`;
 
@@ -168,6 +195,66 @@ const SHOWCASE = {
     let rows = `<p class="sec">버전 ${n}개</p><div class="slot">${ic('plus')}새 버전으로 ${MASTERS[doc].title} 업데이트</div>`;
     for (let v = n; v >= 1; v--) rows += vrow(doc, v, v === n);
     return lensbox(rows);
+  };
+
+  /* The calendar (CalendarScreen): chips on closing days, what closes next on the right. */
+  const appName = (k) => APPS.find(([key]) => key === k)[1];
+  const submitted = (k) => APPS.find(([key]) => key === k)[2] !== 'preparing';
+  // DeadlineChip: urgent red, soon orange, submitted grey with a check; a time when it closes before 23:59.
+  const chip = (k) => {
+    const c = CAL[k];
+    const cls = submitted(k) ? 'done' : c.urgency || '';
+    const tail = submitted(k) ? ic('check') : c.time ? `<span class="tm">${c.time}</span>` : '';
+    return `<span class="chip ${cls}" data-at="chip:${k}" data-chip="${k}"><img src="assets/app/${k}.png" alt=""><span class="cn">${appName(k)}</span>${tail}</span>`;
+  };
+  const dayCell = (d) => {
+    if (!d) return '<div class="cday blank"></div>';
+    const chips = Object.keys(CAL).filter((k) => CAL[k].day === d).map(chip).join('');
+    const cls = d === TODAY ? ' today' : d < TODAY ? ' past' : '';
+    return `<div class="cday${cls}"><span class="dn">${d}</span>${chips}</div>`;
+  };
+  const calWeeks = () => {
+    let html = '';
+    for (let w = 0; w * 7 < MONTH_DAYS; w++) {
+      let days = '';
+      for (let c = 1; c <= 7; c++) { const d = w * 7 + c; days += dayCell(d <= MONTH_DAYS ? d : 0); }
+      html += `<div class="cweek">${days}</div>`;
+    }
+    return html;
+  };
+  // ApplicationRow with .dDay: the name in its urgency colour, "D-1" at the right.
+  const upRow = (k, dday = true) => {
+    const c = CAL[k];
+    const tail = dday ? `<span class="dd">D-${c.day - TODAY}</span>` : '';
+    return `<div class="row up ${c.urgency || ''}" data-at="up:${k}"><img src="assets/app/${k}.png" alt=""><span class="t">${appName(k)}</span>${tail}</div>`;
+  };
+  // UpcomingDeadlines: the open postings by closing day, then those open until filled pinned below a line.
+  const upcoming = () => {
+    const open = Object.keys(CAL).filter((k) => !submitted(k));
+    const dated = open.filter((k) => CAL[k].day).sort((a, b) => CAL[a].day - CAL[b].day);
+    const days = [...new Set(dated.map((k) => CAL[k].day))];
+    return `<div class="cp-up"><p class="cp-h">다가오는 마감</p>
+        ${days.map((d) => `<p class="cp-day">${weekday(d)}</p>${dated.filter((k) => CAL[k].day === d).map((k) => upRow(k)).join('')}`).join('')}</div>
+      <div class="cp-low"><p class="cp-h">상시 채용</p>${open.filter((k) => CAL[k].always).map((k) => upRow(k, false)).join('')}</div>`;
+  };
+  // PostingPanel: back to the list, the posting's head, then its documents as short rows.
+  const postPanel = (k) => {
+    const c = CAL[k];
+    const [n, note, md] = c.resume;
+    const close = `11월 ${c.day}일${c.time ? ` ${c.time}` : ''} 마감`; // Fmt.deadline
+    return `<div class="cp-back">${ic('left')}다가오는 마감</div>
+      <div class="ahead" data-status="preparing">
+        <div class="aname"><img src="assets/app/${k}.png" alt=""><div><b>${appName(k)}</b><span>${c.role}</span></div></div>
+        <div class="adl ${c.urgency || ''}">${ic('cal')}${close}<em>D-${c.day - TODAY}</em></div>
+      </div>
+      <p class="sec">공고</p>
+      <div class="row jd">${ic('page')}<span class="t">공고 내용</span></div>
+      <p class="sec">이력서</p>
+      <div class="vrow"><div class="vsum"><span class="vn">v${n}</span><span class="vbody"><span class="note">${note}</span><span class="date">${stamp(md)}</span></span></div></div>
+      <p class="sec">포트폴리오</p>
+      <div class="slot">${ic('plus')}포트폴리오 추가</div>
+      <p class="sec">자기소개서</p>
+      ${c.cover ? `<div class="row cl">${ic('quote')}<span class="t">문항과 답변</span></div>` : `<div class="slot">${ic('plus')}자기소개서 추가</div>`}`;
   };
 
   frame.innerHTML = `
@@ -228,6 +315,22 @@ const SHOWCASE = {
       </div>
     </section>
 
+    <section class="cal">
+      <div class="cal-main">
+        <div class="cal-head">
+          <span class="cal-title"><span class="y">2026</span><b>11월</b>${ic('chevron')}</span>
+          <span class="cal-nav"><span class="cbtn">${ic('left')}</span><span class="cbtn">${ic('right')}</span></span>
+        </div>
+        <div class="cal-always"><span class="lbl">상시</span>${Object.keys(CAL).filter((k) => CAL[k].always).map(chip).join('')}</div>
+        <div class="cal-wd">${WEEKDAYS.map((w) => `<span>${w}</span>`).join('')}</div>
+        <div class="cal-grid"><div class="cal-mt">11월</div>${calWeeks()}</div>
+        <span class="cal-add">${ic('plus')}</span>
+      </div>
+      <aside class="cpanel"><div class="cp list">${upcoming()}</div><div class="cp post"></div></aside>
+    </section>
+
+    <div class="wsw"><span class="plate"></span><span class="seg" data-at="sw:docs">${ic('docs')}</span><span class="seg" data-at="sw:calendar">${ic('cal')}</span></div>
+
     <header class="tb">
       <div class="tb-lead"><span class="tb-toggle">${ic('sidebar')}</span><div class="tb-title"><b></b><span></span></div></div>
       <div class="tb-trail">
@@ -262,7 +365,7 @@ const SHOWCASE = {
   /* State: what the window shows. `act` is every control the demo (or a visitor) can press. */
   const INITIAL = {
     sel: null, ver: { resume: 4, portfolio: 3 }, item: 'jd', comparing: false, mode: 'split',
-    added: false, sheet: null, postY: 0, typed: '', writing: false,
+    added: false, sheet: null, postY: 0, typed: '', writing: false, view: 'docs', calSel: null,
     status: Object.fromEntries(APPS.map(([k, , s]) => [k, s])),
   };
   const clone = (s) => JSON.parse(JSON.stringify(s));
@@ -290,6 +393,10 @@ const SHOWCASE = {
     if (at === 'tb:compare' && compareKey(s)) s.comparing = !s.comparing;
     if (at === 'tb:split' || at === 'tb:inline') s.mode = a;
     if (at === 'status:submit' && APPINFO[s.sel]) s.status[s.sel] = s.status[s.sel] === 'preparing' ? 'submitted' : 'preparing';
+    // WorkspaceSwitch: the calendar opens on what closes next. A chip or a row shows that posting in the panel.
+    if (kind === 'sw') { s.view = a; s.calSel = null; s.comparing = false; }
+    if ((kind === 'chip' || kind === 'up') && s.view === 'calendar') s.calSel = a;
+    if (at === 'cal:back') s.calSel = null;
     return s;
   }
   const startOf = (i) => SHOWCASE.scenes.slice(0, i).flatMap((sc) => sc.steps).reduce((s, st) => act(s, st.at), clone(INITIAL));
@@ -440,6 +547,7 @@ const SHOWCASE = {
       shown.cmp = ck;
     }
     app.style.setProperty('--py', s.postY);
+    renderCalendar();
     renderSheet();
     if (s.sheet?.phase === 'loading') later(() => { state = act(state, 'sheet:loaded'); render(); }, SHOWCASE.load);
 
@@ -484,6 +592,21 @@ const SHOWCASE = {
     shown.kind = kind;
     shown.comparing = s.comparing;
     if (app.classList.contains('instant')) { void app.offsetWidth; app.classList.remove('instant'); }
+  }
+
+  /* The calendar: which view is up, the ringed chip, and the panel's list or posting crossfading. */
+  function renderCalendar() {
+    const s = state;
+    app.dataset.view = s.view;
+    $$('.chip').forEach((c) => c.classList.toggle('sel', c.dataset.chip === s.calSel));
+    const post = $('.cp.post');
+    if (s.calSel && shown.calSel !== s.calSel) {
+      // From one posting to another the new one fades in over the same place (`state`).
+      post.innerHTML = `<div class="cp-in">${postPanel(s.calSel)}</div>`;
+    }
+    shown.calSel = s.calSel;
+    $('.cp.list').classList.toggle('on', !s.calSel);
+    post.classList.toggle('on', !!s.calSel);
   }
 
   /* The cover letter: only the second answer and its count change while the scene types. */

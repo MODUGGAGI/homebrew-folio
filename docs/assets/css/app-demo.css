@@ -353,3 +353,103 @@
   display: grid; place-items: center; background: var(--accent); color: #fff; box-shadow: 0 0 12px rgba(0, 0, 0, .12);
 }
 .app .cl-add svg { width: 17px; height: 17px; stroke-width: 2.2; }
+
+/* WorkspaceSwitch: 문서 and 캘린더 on a grey capsule at the sidebar's top right, one white plate under the chosen one.
+   With the sidebar closed in the calendar it moves to the window's left; while comparing it goes with the sidebar. */
+.wsw {
+  position: absolute; left: 0; top: 12px; z-index: 5; display: flex; padding: 2px; border-radius: 999px; background: rgba(0, 0, 0, .06);
+  transform: translateX(194px); transition: transform var(--panel), opacity var(--panel);
+}
+.app[data-view="calendar"] .wsw { transform: translateX(20px); }
+.app[data-comparing="true"] .wsw { transform: translateX(-106px); opacity: 0; }
+.wsw .plate {
+  position: absolute; left: 2px; top: 2px; width: 36px; height: 28px; border-radius: 999px; background: #fff;
+  box-shadow: 0 .5px 1.5px rgba(0, 0, 0, .12); transition: transform var(--selection);
+}
+.app[data-view="calendar"] .wsw .plate { transform: translateX(36px); }
+.wsw .seg { position: relative; width: 36px; height: 28px; display: grid; place-items: center; color: var(--ink2); transition: color var(--hover); }
+.app .wsw svg { width: 15px; height: 15px; }
+.app[data-view="docs"] .seg[data-at="sw:docs"], .app[data-view="calendar"] .seg[data-at="sw:calendar"] { color: var(--ink); }
+
+/* The library steps aside for the calendar: the sidebar slides out, the toolbar's own parts fade. */
+.app[data-view="calendar"] .sb { transform: translateX(-300px); opacity: 0; }
+.tb-lead, .tb-trail { transition: transform var(--panel), opacity var(--content); }
+.app[data-view="calendar"] .tb-lead, .app[data-view="calendar"] .tb-trail { opacity: 0; }
+
+/* CalendarScreen: comes in a little small and low and settles (calendarScreen transition). */
+.cal {
+  position: absolute; inset: 0; z-index: 2; background: linear-gradient(#fff 0 52px, var(--hair) 52px 53px, #fff 53px);
+  opacity: 0; visibility: hidden; transform: translateY(10px) scale(.97); transform-origin: 50% 0;
+  transition: opacity var(--panel), transform var(--panel), visibility 0s linear .5s;
+}
+.app[data-view="calendar"] .cal { opacity: 1; visibility: visible; transform: none; transition: opacity var(--panel), transform var(--panel); }
+.cal-main { position: absolute; left: 0; top: 53px; bottom: 0; right: 300px; display: flex; flex-direction: column; }
+.cal-head { display: flex; align-items: center; justify-content: space-between; padding: 14px 24px 12px; }
+.cal-title { display: flex; align-items: center; gap: 8px; font-size: 26px; line-height: 32px; letter-spacing: -.02em; }
+.cal-title .y { color: var(--ink2); }
+.cal-title b { font-weight: 700; }
+.app .cal-title svg { width: 16px; height: 16px; stroke-width: 2; color: var(--ink3); }
+.cal-nav { display: flex; gap: 4px; }
+.cbtn { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; color: var(--ink2); }
+.app .cbtn svg { width: 14px; height: 14px; stroke-width: 1.9; }
+.cal-always { display: flex; align-items: center; gap: 10px; padding: 0 24px 10px; }
+.cal-always .lbl { font-size: 11px; font-weight: 600; color: var(--ink2); }
+.cal-wd { display: grid; grid-template-columns: repeat(7, 1fr); padding: 0 12px 6px; font-size: 11px; font-weight: 500; color: var(--ink2); }
+.cal-wd span { padding-left: 10px; }
+/* Sunday in red, as on Korean calendars. */
+.cal-wd span:first-child { color: rgba(255, 59, 48, .75); }
+.cal-grid { flex: 1; min-height: 0; display: grid; grid-template-rows: 40px repeat(5, 1fr); padding: 0 12px 12px; }
+.cal-mt { align-self: end; padding: 0 0 6px 9px; font-size: 15px; font-weight: 600; }
+.cweek { display: grid; grid-template-columns: repeat(7, 1fr); border-top: .5px solid rgba(0, 0, 0, .12); }
+.cweek:last-child { border-bottom: .5px solid rgba(0, 0, 0, .12); }
+.cday { min-width: 0; display: flex; flex-direction: column; gap: 2px; padding: 5px 4px 0; }
+.cday + .cday { border-left: .5px solid rgba(0, 0, 0, .12); }
+.dn { align-self: flex-start; min-width: 27px; height: 27px; padding: 0 7px; display: grid; place-items: center; border-radius: 999px; font-size: 15px; font-variant-numeric: tabular-nums; }
+.cday.past .dn { color: var(--ink2); }
+.cday.today .dn { background: var(--accent); color: #fff; font-weight: 600; }
+
+/* DeadlineChip: the posting's icon and company, tinted by how soon it closes */
+.chip {
+  display: flex; align-items: center; gap: 5px; height: 24px; padding: 0 6px; border-radius: 6px; min-width: 0;
+  font-size: 12px; font-weight: 500; white-space: nowrap; color: var(--ink); background: rgba(0, 136, 255, .12);
+  transition: box-shadow var(--selection);
+}
+.chip img { width: 16px; height: 16px; border-radius: 4px; flex: none; }
+.chip .cn { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.chip .tm { font-size: 11px; opacity: .8; font-variant-numeric: tabular-nums; }
+.chip.soon { color: #e07800; background: rgba(255, 141, 40, .14); }
+.chip.urgent { color: #ff3b30; background: rgba(255, 59, 48, .14); }
+.chip.done { color: var(--ink2); background: rgba(0, 0, 0, .05); }
+.chip.done img { opacity: .6; }
+.app .chip svg { width: 10px; height: 10px; stroke-width: 2.6; }
+.chip.sel { box-shadow: inset 0 0 0 1.5px var(--accent); }
+.cal-always .chip { flex: none; }
+.cal-add {
+  position: absolute; right: 20px; bottom: 20px; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--accent); color: #fff; box-shadow: 0 2px 12px rgba(0, 0, 0, .16);
+}
+.app .cal-add svg { width: 18px; height: 18px; stroke-width: 2.2; }
+
+/* CalendarInspector: what closes next, or one posting, fading through each other */
+.cpanel { position: absolute; right: 0; top: 53px; bottom: 0; width: 300px; border-left: 1px solid var(--hair); }
+.cp { position: absolute; inset: 0; opacity: 0; visibility: hidden; transition: opacity var(--state), visibility 0s linear .28s; }
+.cp.on { opacity: 1; visibility: visible; transition: opacity var(--state); }
+.cp-up { padding: 0 8px; }
+.cp-h { margin: 0; padding: 12px 10px 4px; font-size: 14px; font-weight: 600; color: var(--ink2); }
+.cp-day { margin: 0; padding: 4px 10px 2px; font-size: 11px; font-weight: 600; color: var(--ink2); }
+.cp-day ~ .cp-day { padding-top: 14px; }
+.row.up .dd { font-size: 11px; font-weight: 600; color: var(--ink2); font-variant-numeric: tabular-nums; }
+.row.up.soon .t, .row.up.soon .dd { color: #e07800; }
+.row.up.urgent .t, .row.up.urgent .dd { color: #ff3b30; }
+.cp-low { position: absolute; left: 0; right: 0; bottom: 0; height: 33%; padding: 0 8px; border-top: 1px solid var(--hair); }
+.cp.post { padding: 0 8px; }
+.cp-in { display: flex; flex-direction: column; gap: 2px; animation: appCapIn var(--state) both; }
+.cp-in .sec { padding-top: 10px; }
+.cp-back { display: flex; align-items: center; gap: 2px; padding: 12px 10px 2px 4px; font-size: 14px; font-weight: 600; color: var(--ink2); }
+.app .cp-back svg { width: 14px; height: 14px; stroke-width: 2; }
+.adl { display: flex; align-items: center; gap: 6px; margin-top: 12px; padding: 8px 10px; border-radius: 8px; background: rgba(0, 0, 0, .04); font-size: 12px; font-weight: 500; }
+.app .adl svg { width: 13px; height: 13px; color: var(--ink2); }
+.adl em { margin-left: auto; font-style: normal; font-weight: 600; font-variant-numeric: tabular-nums; }
+.adl.soon { color: #e07800; background: rgba(255, 141, 40, .1); }
+.adl.urgent { color: #ff3b30; background: rgba(255, 59, 48, .08); }
+.adl.soon svg, .adl.urgent svg { color: currentColor; }
