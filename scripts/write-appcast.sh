@@ -16,7 +16,7 @@ cat <<XML
       <pubDate>$(LC_ALL=C date -u '+%a, %d %b %Y %H:%M:%S +0000')</pubDate>
       <sparkle:version>$version</sparkle:version>
       <sparkle:shortVersionString>$version</sparkle:shortVersionString>
-      <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
+      <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
       <enclosure url="https://github.com/MODUGGAGI/homebrew-folio/releases/download/v$version/Folio.zip" $attrs type="application/octet-stream"/>
     </item>
   </channel>

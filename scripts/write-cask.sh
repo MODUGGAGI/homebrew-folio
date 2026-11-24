@@ -16,7 +16,7 @@ cask "folio" do
   homepage "https://github.com/MODUGGAGI/homebrew-folio"
 
   auto_updates true
-  depends_on macos: ">= :tahoe"
+  depends_on macos: ">= :sequoia"
 
   app "Folio.app"
   binary "#{appdir}/Folio.app/Contents/MacOS/folio-mcp"
